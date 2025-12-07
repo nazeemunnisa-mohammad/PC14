@@ -1,0 +1,88 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+
+void main() {
+  runApp(MaterialApp(
+    home: UserFormExample(),
+  ));
+}
+
+class UserFormExample extends StatefulWidget {
+  @override
+  _UserFormExampleState createState() => _UserFormExampleState();
+}
+
+class _UserFormExampleState extends State<UserFormExample> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("User Form")),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: FormBuilder(
+          key: _formKey,
+          child: Column(
+            children: [
+              FormBuilderTextField(
+                name: 'firstName',
+                decoration: InputDecoration(labelText: 'First Name'),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.minLength(5),
+                  FormBuilderValidators.maxLength(15),
+                ]),
+              ),
+              SizedBox(height: 15),
+              FormBuilderTextField(
+                name: 'lastName',
+                decoration: InputDecoration(labelText: 'Last Name'),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.minLength(5),
+                  FormBuilderValidators.maxLength(15),
+                ]),
+              ),
+              SizedBox(height: 15),
+              FormBuilderTextField(
+                name: 'phoneNumber',
+                decoration: InputDecoration(labelText: 'Phone Number'),
+                keyboardType: TextInputType.number,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.numeric(),
+                  FormBuilderValidators.equalLength(10,
+                      errorText: 'Phone number must be 10 digits'),
+                ]),
+              ),
+              SizedBox(height: 15),
+              FormBuilderTextField(
+                name: 'email',
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.email(),
+                ]),
+              ),
+              SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.saveAndValidate()) {
+                    final data = _formKey.currentState!.value;
+                    print("Form Data: $data");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Form Submitted Successfully!")),
+                    );
+                  }
+                },
+                child: Text("Submit"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
